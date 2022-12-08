@@ -1,62 +1,48 @@
-import java.nio.file.Path;
-import java.util.Formatter;
+import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@ToString(callSuper = true)
 public class Bild extends Datei {
-  BildMetadata bildmetadata;
-
-  public Bild(Path path) {
-    super(path);
-  }
-
-  public Bild(Path path, int id) {
-    super(path, id);
-  }
-
-  public Bild(Path path, int id, BildMetadata bildmetadata) {
-    super(path, id);
-    this.bildmetadata = bildmetadata;
-  }
+  @ToString.Exclude     private BildMetadata bildmetadata;
+  @ToString.Exclude     private String breitePix;
+  @ToString.Exclude     private String hoehePix;
+                        private String kameraHersteller;
+                        private String aufnahmeDatum;
   
+  public Bild(String pathName) {
+    super(pathName);
+    pullMetadata();
+  }
+
+  public Bild(String pathName, int id) {
+    super(pathName, id);
+    pullMetadata();
+  }
+
+  public Bild(String pathName, int id, BildMetadata bildmetadata) {
+    super(pathName, id);
+    this.bildmetadata = bildmetadata;
+    pullMetadata();
+  }
+
   public void setMetdata(BildMetadata bildmetadata) {
     this.bildmetadata = bildmetadata;
   }
 
-  public String getBreitePix() {
-    return bildmetadata.getBreitePix();
+  private void pullMetadata() {
+    this.breitePix = bildmetadata.getBreitePix();
+    this.hoehePix = bildmetadata.getHoehePix();
+    this.kameraHersteller = bildmetadata.getKameraHersteller();
+    this.aufnahmeDatum = bildmetadata.getAufnahmeDatum();
   }
 
-  public String getHoehePix() {
-    return bildmetadata.getHoehePix();
-  }
-
-  public String getPix() {
-    return bildmetadata.getBreitePix() + " x " + bildmetadata.getHoehePix();
-  }
-
-  public String getKameraHersteller() {
-    return bildmetadata.getKameraHersteller();
-  }
-
-  public String getAufnahmeDatum() {
-    return bildmetadata.getAufnahmeDatum();
+  @ToString.Include(name = "Pixelmasze") String getPix() {
+    return bildmetadata.getPixMase();
   }
 
   public void showMeta() {
     bildmetadata.showMetaDaten();
   }
-
-  @Override
-  public String toString() {
-    return super.toString() + metaDatenToString("    ");
-  }
-
-  public String metaDatenToString(String indent) {
-    Formatter f = new Formatter();
-    f.format("\n%s AufnahmeDatum: %-15s Kamerahersteller: %-25s Pixelmaße:%-10s", indent,
-        getAufnahmeDatum(), getKameraHersteller(), getPix());
-    String bildMeta = f.toString();
-    f.close();
-    return bildMeta;
-
-  }
 }
+
