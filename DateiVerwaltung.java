@@ -14,9 +14,7 @@ public class DateiVerwaltung {
   private Path dateiAblage =
       Paths.get("C:\\Users\\tikoehler\\eclipse-workspace\\BildProjekt\\bilderAblage\\");
   private HashMap<File, LinkedList<Datei>> mapDirToList = new HashMap<>();
-  private DataListHelper datalisthelper = new DataListHelper();
   private MetaDataConnector metadataConnector = new drewMetadataConnector();
-  private FileMover filemover = new FileMover();
 
   public DateiVerwaltung() {
     startDateiVerwaltung();
@@ -30,7 +28,7 @@ public class DateiVerwaltung {
   }
 
   private void erstelleListenFuerDir() {
-    for (File f : showFolders()) {
+    for (File f : dateiAblage.toFile().listFiles()) {
       mapDirToList.putIfAbsent(f, new LinkedList<Datei>());
       sammlungen.add(mapDirToList.get(f));
     }
@@ -50,29 +48,17 @@ public class DateiVerwaltung {
   }
 
   public void addFileToItsDir(File f, File dir) {
-    Datei dat = new Datei(f.toPath());
-    if (testForImg(dat)) {
-      Optional<BildMetadata> meta = metadataConnector.getMetadData(f);
-      if(meta.isPresent()) {
-       matchListToDirectory(dir)
-          .add(new Bild(f.toPath(), dat.getId(), meta.get()));
+    matchListToDirectory(dir).add(ensureInheritedType(new Datei(f.toString())));
+  }
+  
+  private Datei ensureInheritedType(Datei datei) {
+      Optional<BildMetadata> meta = metadataConnector.getMetadData(datei.file());
+      if (meta.isPresent()) {
+        return new Bild(datei.getPathName(), datei.getId(), meta.get());
+      }else {
+        return new Datei(datei.getPathName(), datei.getId());
       }
-    } else {
-      matchListToDirectory(dir).add(new Datei(f.toPath(), dat.getId()));
-    }
-
   }
-
-  private boolean testForImg(Datei dat) {
-    return dat.updateTyp().toUpperCase().startsWith("IMAGE");   
-  }
-
-
-  public void addFileToItsDirWithId(File f, File dir, int id) {
-    matchListToDirectory(dir).add(new Datei(f.toPath(), id));
-  }
-
-
 
   private void zeigeSammlung(List<Datei> liste) {
     String indent = "   ";
@@ -92,14 +78,8 @@ public class DateiVerwaltung {
 
 
   private String returnDirNameOfList(List<Datei> liste) {
-    return mapDirToList
-        .entrySet()
-        .stream()
-        .filter((a) -> a.getValue().equals(liste))
-        .findAny()
-        .get()
-        .getKey()
-        .getName();
+    return mapDirToList.entrySet().stream().filter((a) -> a.getValue().equals(liste)).findAny()
+        .get().getKey().getName();
   }
 
   private LinkedList<Datei> matchListToDirectory(File dir) {
@@ -109,32 +89,23 @@ public class DateiVerwaltung {
 
 
 
-  private File[] showFolders() {
-    return dateiAblage.toFile().listFiles();
-  }
-
-
   public void sortListen() {
     sammlungen.stream().forEach((b) -> Collections.sort(b));
   }
 
 
   public void moveDateiTo(Datei b, Path to) {
-    List<Datei> listBefore = matchListToDirectory(b.returnParentFile());
-    List<Datei> listAfter = matchListToDirectory(to.toFile());
-    filemover.moveDateiTo(b, to, listBefore, listAfter);
+    FileMover.moveDateiTo(b, to, matchListToDirectory(b.returnParentFile()),
+        matchListToDirectory(to.toFile()));
   }
 
 
-  public void renameFileByIdInDir(int id, String name, File dir) {
-    returnDateiById(id).changeNameInDirectory(dir, name);
-  }
 
   public Datei returnDateiById(int i) {
 
     for (LinkedList<Datei> liste : sammlungen) {
-      if (datalisthelper.MatchInListWithPred(liste, datalisthelper.matchesId(i))) {
-        return datalisthelper.findDateiWithPred(liste, datalisthelper.matchesId(i));
+      if (DataListHelper.matchInListWithPred(liste, DataListHelper.matchesId(i))) {
+        return DataListHelper.findDateiWithPred(liste, DataListHelper.matchesId(i));
       }
     }
     return null;
@@ -142,8 +113,8 @@ public class DateiVerwaltung {
 
   public Datei returnDateiByName(String name) {
     for (LinkedList<Datei> liste : sammlungen) {
-      if (datalisthelper.MatchInListWithPred(liste, datalisthelper.matchesName(name))) {
-        return datalisthelper.findDateiWithPred(liste, datalisthelper.matchesName(name));
+      if (DataListHelper.matchInListWithPred(liste, DataListHelper.matchesName(name))) {
+        return DataListHelper.findDateiWithPred(liste, DataListHelper.matchesName(name));
       }
     }
     return null;
