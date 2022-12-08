@@ -1,9 +1,14 @@
+import lombok.Builder;
+import lombok.Getter;
+@Getter
 
+@Builder
 public class BildMetadata {
     private String breitePix;
     private String hoehePix;
     private String kameraHersteller;
     private String aufnahmeDatum;
+    
     
     public BildMetadata(String breitePix, String hoehePix, String kameraHersteller, String aufnahmeDatum) {
       this.breitePix = breitePix;
@@ -12,23 +17,9 @@ public class BildMetadata {
       this.aufnahmeDatum = aufnahmeDatum;
     }
     
-    
-    public String getBreitePix() {
-      return breitePix;
+    public String getPixMase() {
+      return " " + getBreitePix()+ " x " + getHoehePix() + " Pixel";
     }
-
-    public String getHoehePix() {
-      return hoehePix;
-    }
-
-    public String getKameraHersteller() {
-      return kameraHersteller;
-    }
-
-    public String getAufnahmeDatum() {
-      return aufnahmeDatum;
-    }
-
     
     public void showMetaDaten() {
       System.out.println("breitePix : " + getBreitePix() );
