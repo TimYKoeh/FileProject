@@ -31,7 +31,7 @@ public class UserGroupCreateView {
 
   public UserGroupCreateView(String name) {
     this.name = name;
-    this.user = new LinkedList<User>();
-    this.albums = new LinkedList<Album>();
+    this.user = new LinkedList<>();
+    this.albums = new LinkedList<>();
   }
 }

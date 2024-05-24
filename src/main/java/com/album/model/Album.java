@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @Getter
 @Setter
 @ToString
@@ -27,7 +28,7 @@ public class Album {
 
   @Id
   @Column(name = "sammlung_Id")
-  private String uuid;
+  private @Setter @Getter String uuid;
 
 
   private String name;
@@ -57,4 +58,25 @@ public class Album {
   }
 
 
+  /*
+  public List<Image> getPictures(){
+    return pictures;
+  }
+
+  public void setPictures(List<Image> picturesNew) {
+    this.pictures = picturesNew;
+  }
+
+  public List<UserGroup> getUserGroups(){
+    return userGroups;
+  }
+
+  public void setUserGroups(List<UserGroup> userGroupNew) {
+    this.userGroups = userGroupNew;
+  }
+
+  public void setUuid(String uuidNew) {
+    this.uuid = uuidNew;
+  }
+*/
 }

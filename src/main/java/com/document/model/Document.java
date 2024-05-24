@@ -2,18 +2,19 @@ package com.document.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
+
+@ToString
 @Getter
 @Setter
-@ToString
 @MappedSuperclass
-@Table(name = "datei")
+//@Table(name = "datei")
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Document implements Comparable<Document> {
