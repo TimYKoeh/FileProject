@@ -25,10 +25,10 @@ public class ImageController {
 
  @GetMapping("image")
   public ResponseEntity<List<Optional<ImageView>>> getList(
-      @RequestParam(required = false)String uuid,
-      @RequestParam(required = false)String pathname,
-      @RequestParam(required = false)String name,
-      @RequestParam(required = false)String typ
+      @RequestParam(name="uuid", required = false)String uuid,
+      @RequestParam(name="pathname", required = false)String pathname,
+      @RequestParam(name="name", required = false)String name,
+      @RequestParam(name="typ" ,required = false)String typ
       ) {
        return ResponseEntity.ok(service.getList(uuid, pathname, name, typ));
   }

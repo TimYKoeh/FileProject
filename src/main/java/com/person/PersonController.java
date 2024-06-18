@@ -25,10 +25,10 @@ public class PersonController {
 
   @GetMapping("person")
   public ResponseEntity<List<Optional<PersonView>>> getList(
-      @RequestParam(required = false) String uuid,
-      @RequestParam(required = false) String firstName,
-      @RequestParam(required = false) String surname,
-      @RequestParam(required = false) String email) {
+      @RequestParam(name="uuid", required = false) String uuid,
+      @RequestParam(name="firstName", required = false) String firstName,
+      @RequestParam(name="surname", required = false) String surname,
+      @RequestParam(name="email", required = false) String email) {
     return ResponseEntity.ok(service.getList(uuid, firstName, surname, email));
   }
 

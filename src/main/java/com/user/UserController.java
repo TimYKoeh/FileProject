@@ -26,9 +26,9 @@ public class UserController {
 
   @GetMapping(path = "user")
   public ResponseEntity<List<Optional<UserView>>> getList(
-      @RequestParam(required = false)String uuid,
-      @RequestParam(required = false)String name,
-      @RequestParam(required = false)String password
+      @RequestParam(name= "uuid", required = false)String uuid,
+      @RequestParam(name = "name",required = false)String name,
+      @RequestParam(name = "password", required = false)String password
       )
   {
    return ResponseEntity.ok(service.getList(uuid, name, password));

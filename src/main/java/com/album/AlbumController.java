@@ -26,7 +26,7 @@ public class AlbumController {
 
   @GetMapping("album")
   public ResponseEntity<List<AlbumView>> getList(
-      @RequestParam(required = false) String name) {
+      @RequestParam(name="name", required = false) String name) {
     return ResponseEntity.ok(service.getList(name));
   }
 

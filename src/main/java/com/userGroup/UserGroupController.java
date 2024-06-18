@@ -26,8 +26,8 @@ public class UserGroupController {
 
   @GetMapping(path = "user_groups")
   public ResponseEntity<List<Optional<UserGroupView>>> getList(
-      @RequestParam(required = false) String uuid,
-      @RequestParam(required = false) String name) {
+      @RequestParam(name="uuid", required = false) String uuid,
+      @RequestParam(name="name", required = false) String name) {
     return ResponseEntity.ok(service.getList(uuid, name));
   }
 
