@@ -24,8 +24,8 @@ public class PersonMapperImpl implements PersonMapper {
         PersonView personView = new PersonView();
 
         personView.setUuid( person.getUuid() );
-        personView.setFirstName( person.getFirstName() );
-        personView.setSurname( person.getSurname() );
+        personView.setFirstName( person.getVorname() );
+        personView.setSurname( person.getNachname() );
         personView.setEmail( person.getEmail() );
 
         return personView;
@@ -40,8 +40,8 @@ public class PersonMapperImpl implements PersonMapper {
         Person person = new Person();
 
         person.setUuid( view.getUuid() );
-        person.setFirstName( view.getFirstName() );
-        person.setSurname( view.getSurname() );
+        person.setVorname( view.getFirstName() );
+        person.setNachname( view.getSurname() );
         person.setEmail( view.getEmail() );
 
         return person;
@@ -56,8 +56,8 @@ public class PersonMapperImpl implements PersonMapper {
         Person person = new Person();
 
         person.setUser( updateView.getUser() );
-        person.setFirstName( updateView.getFirstName() );
-        person.setSurname( updateView.getSurname() );
+        person.setVorname( updateView.getFirstName() );
+        person.setNachname( updateView.getSurname() );
         person.setEmail( updateView.getEmail() );
 
         return person;
@@ -73,8 +73,8 @@ public class PersonMapperImpl implements PersonMapper {
 
         person.setUuid( createView.getUuid() );
         person.setUser( createView.getUser() );
-        person.setFirstName( createView.getFirstName() );
-        person.setSurname( createView.getSurname() );
+        person.setVorname( createView.getFirstName() );
+        person.setNachname( createView.getSurname() );
         person.setEmail( createView.getEmail() );
 
         return person;

@@ -36,12 +36,7 @@ public class UserGroupMapperImpl implements UserGroupMapper {
         if ( list != null ) {
             user = new ArrayList<User>( list );
         }
-        List<Album> list1 = userGroup.getAlbums();
-        if ( list1 != null ) {
-            albums = new ArrayList<Album>( list1 );
-        }
-
-        UserGroupView userGroupView = new UserGroupView( uuid, name, user, albums );
+        UserGroupView userGroupView = new UserGroupView( uuid, name, user);
 
         return userGroupView;
     }

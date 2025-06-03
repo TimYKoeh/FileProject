@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.user.model.User;
+import com.user.view.UserDetailView;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -33,4 +34,16 @@ public class FilteredUserRepositoryImpl implements FilteredUserRepository{
     criteriaquery.where(predicates.toArray(new Predicate[0]));
     return entitymanager.createQuery(criteriaquery).getResultList();
   }
+  /*
+  @Override
+  public UserDetailView getUserDetailView(String uuid) {
+    return entitymanager.createQuery(
+        "SELECT new com.user.view.UserDetailView(u.uuid, u.name, p.vorname, p.nachname, p.email, u.userGroups) " +
+        "FROM User u " +
+        "JOIN u.person p " +
+        "WHERE u.uuid = :uuid", UserDetailView.class)
+      .setParameter("uuid", uuid)
+      .getSingleResult();
+  }
+*/
 }

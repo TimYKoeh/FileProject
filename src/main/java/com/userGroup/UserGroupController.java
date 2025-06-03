@@ -30,10 +30,18 @@ public class UserGroupController {
       @RequestParam(name="name", required = false) String name) {
     return ResponseEntity.ok(service.getList(uuid, name));
   }
+  
+  @GetMapping(value = "user_groups/user")
+  public ResponseEntity<List<Optional<UserGroupView>>> getGroupsAssociatedWithUser(
+      @RequestParam(name = "uuid",required = true)String uuid)
+  {
+    return ResponseEntity.ok(service.getGroupsWithUser(uuid));
+  }
+  
 
   @GetMapping("user_groups/{uuid}")
   public ResponseEntity<UserGroupView> get(
-      @PathVariable String uuid)
+      @PathVariable ("uuid") String uuid)
   {
     return service.get(uuid).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 
@@ -41,7 +49,7 @@ public class UserGroupController {
 
   @PutMapping("user_groups/{uuid}")
   public ResponseEntity<Optional<UserGroupView>> update(
-      @PathVariable String uuid,
+      @PathVariable("uuid") String uuid,
       @RequestBody UserGroupUpdateView updateView
       )
   {
@@ -50,7 +58,7 @@ public class UserGroupController {
 
   @DeleteMapping("user_groups/{uuid}")
   public ResponseEntity<Optional<UserGroupView>> delete(
-      @PathVariable String uuid)
+      @PathVariable("uuid") String uuid)
   {
     return ResponseEntity.ok(service.delete(uuid));
   }

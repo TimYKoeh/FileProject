@@ -9,4 +9,5 @@ public interface UserGroupRepository extends CrudRepository<UserGroup, String>, 
 
   @Override
   List<UserGroup> findAll();
+  List<UserGroup> findByUser_Uuid(String uuid);
 }

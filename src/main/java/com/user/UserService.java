@@ -2,13 +2,16 @@ package com.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.user.model.User;
-import com.user.view.UserCreateView;
-import com.user.view.UserUpdateView;
+import com.user.view.UserDetailView;
 import com.user.view.UserView;
+import com.userGroup.view.UserGroupView;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -31,12 +34,41 @@ public class UserService {
   }
 
 
+  public Optional<UserDetailView> getDetailView(String uuid){
+    return mapper.toOptionalUserDetailView(repository.findById(uuid));
+  }
+  
+  public Optional<List<UserGroupView>> getUserAssociatedUserGroups(String userId) {
+    return repository.findById(userId)
+                     .map(user -> user.getUserGroups()
+                                      .stream()
+                                      .map(mapper::toUserGroupView)
+                                      .collect(Collectors.toList()));
+}
 
-  public Optional<UserView> update(UserUpdateView userUpdated, String uuid) {
+
+  public List<Optional<UserView>>findContaining(String query){
+    return Stream.of(
+        repository.findByNameContainingIgnoreCase(query),
+        repository.findByPersonVornameContainingIgnoreCase(query),
+        repository.findByPersonNachnameContainingIgnoreCase(query),
+        repository.findByPersonEmailContainingIgnoreCase(query)
+        )
+        .flatMap(List::stream)
+        .distinct()
+        .map(benutzer -> mapper.toOptionalView(Optional.of(benutzer)))
+        .collect(Collectors.toList());
+  }
+  
+  
+  
+
+
+  public Optional<UserView> update(UserDetailView userUpdated, String uuid) {
     return mapper
         .toOptionalView(repository.findById(uuid)
             .map(user -> {
-      User updatedUser = keepPreviousRelations(mapper.update(userUpdated), user);
+      User updatedUser = keepPreviousRelations(mapper.fromUserDetailView(userUpdated), user);
       updatedUser.setUuid(uuid);
 
       repository.save(updatedUser);
@@ -65,9 +97,12 @@ public class UserService {
     });
     return mapper.toOptionalView(optionalBenutzer);
   }
+  
+  
 
-  public Optional<UserView> save(UserCreateView user) {
-    return mapper.toOptionalView(Optional.of(repository.save(mapper.create(user))));
+  public Optional<UserView> save(UserDetailView user) {
+    user.setUuid(UUID.randomUUID().toString());
+    return mapper.toOptionalView(Optional.of(repository.save(mapper.fromUserDetailView(user))));
   }
 
 

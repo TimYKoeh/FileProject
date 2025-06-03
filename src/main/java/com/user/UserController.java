@@ -13,16 +13,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.user.view.UserCreateView;
-import com.user.view.UserUpdateView;
+import com.user.view.UserDetailView;
 import com.user.view.UserView;
+import com.userGroup.view.UserGroupView;
 
 @CrossOrigin(origins = "http://localhost:4200")
-@RestController
+@RestController 
 public class UserController {
 
   @Autowired
   private UserService service;
+  
+  @Autowired UserUsergroupService userUserGroupService;
 
   @GetMapping(path = "user")
   public ResponseEntity<List<Optional<UserView>>> getList(
@@ -34,34 +36,64 @@ public class UserController {
    return ResponseEntity.ok(service.getList(uuid, name, password));
   }
 
-  @GetMapping("user/{uuid}")
-  public ResponseEntity<UserView> get(
-      @PathVariable String uuid)
+  @GetMapping(value = "user/{uuid}")
+  public ResponseEntity<Optional<UserDetailView>> get(
+      @PathVariable("uuid") String uuid)
   {
-    return service.get(uuid).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    return ResponseEntity.ok(service.getDetailView(uuid));
 
   }
+  
+  @GetMapping("user/{uuid}/usergroups")
+  public ResponseEntity<Optional<List<UserGroupView>>> getFittingUserGroups(
+      @PathVariable("uuid") String uuid)
+  {
+    return ResponseEntity.ok(service.getUserAssociatedUserGroups(uuid));
+  }
+  
+  @GetMapping(value = "userCon")
+  public ResponseEntity<List<Optional<UserView>>> getContaining(
+      @RequestParam(name = "name",required = true)String name)
+  {
+    return ResponseEntity.ok(service.findContaining(name));
+  }
+  
+  @GetMapping(path = "userDetail")
+  public ResponseEntity<Optional<UserDetailView>> getDetails(
+    @RequestParam(name="uuid", required= true)String uuid
+    )
+    {
+      return ResponseEntity.ok(service.getDetailView(uuid));
+    }
 
   @PostMapping(value ="user", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Optional<UserView>> create(
-        @RequestBody UserCreateView createView
+        @RequestBody UserDetailView detailView
         )
     {
-       return ResponseEntity.ok(service.save(createView));
+       return ResponseEntity.ok(service.save(detailView));
     }
+  
+  @PutMapping("/user/{uuid}/usergroups2")
+  public ResponseEntity<Optional<UserView>> updateUserGroups(
+      @PathVariable("uuid") String uuid,
+      @RequestBody List<String> groupIds) {
+
+      return ResponseEntity.ok(userUserGroupService.updateAssociatedUserGroups(uuid, groupIds));
+  }
 
   @PutMapping("user/{uuid}")
   public ResponseEntity<Optional<UserView>> update(
-      @PathVariable String uuid,
-      @RequestBody UserUpdateView updateView
+      @PathVariable("uuid") String uuid,
+      @RequestBody UserDetailView detailView
       )
   {
-    return ResponseEntity.ok(service.update(updateView, uuid));
+    return ResponseEntity.ok(service.update(detailView, uuid));
   }
 
   @DeleteMapping("user/{uuid}")
   public ResponseEntity<Optional<UserView>> delete(
-      @PathVariable String uuid)
+      @PathVariable ("uuid") String uuid)
   {
     return ResponseEntity.ok(service.delete(uuid));
   }

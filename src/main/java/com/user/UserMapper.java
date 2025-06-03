@@ -8,8 +8,10 @@ import com.user.view.UserCreateView;
 import com.user.view.UserDetailView;
 import com.user.view.UserUpdateView;
 import com.user.view.UserView;
+import com.userGroup.model.UserGroup;
+import com.userGroup.view.UserGroupView;
 
-@Mapper(componentModel = "spring")//, uses = PersonMapper.class)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
   public default Optional<UserView> toOptionalView(Optional<User> user){return user.map(this::toView);}
@@ -18,5 +20,10 @@ public interface UserMapper {
   public User fromView(UserView view);
   public User create(UserCreateView createView);
   public User update(UserUpdateView updateVew);
-  public UserDetailView detailed(Optional<User> user, Optional<Person> person);
+  public UserDetailView toUserDetailView(User user);
+  public default Optional<UserDetailView> toOptionalUserDetailView(Optional<User> user){return user.map(this::toUserDetailView);}
+  public User fromUserDetailView(UserDetailView userdetailView);
+  public default Optional<User> fromOptionalUserDetailView(Optional<UserDetailView> userdetailview){return userdetailview.map(this::fromUserDetailView);}
+  public UserGroupView toUserGroupView(UserGroup usergroup);
+  
   }

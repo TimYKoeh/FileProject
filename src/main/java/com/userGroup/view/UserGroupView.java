@@ -20,7 +20,7 @@ public class UserGroupView {
   @JsonIgnoreProperties("userGroups")
   private List<Album> albums;
 */
-  public UserGroupView(String uuid, String name, List<User> user, List<Album> albums) {
+  public UserGroupView(String uuid, String name, List<User> user) {
     this.uuid = uuid;
     this.name = name;
     /*

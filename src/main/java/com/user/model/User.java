@@ -1,6 +1,7 @@
 package com.user.model;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.person.model.Person;
@@ -55,5 +56,18 @@ public class User {
     this.name = name;
     this.password = password;
     this.uuid = UUID.randomUUID().toString();
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      User user = (User) o;
+      return Objects.equals(uuid, user.uuid);
+  }
+
+  @Override
+  public int hashCode() {
+      return Objects.hash(uuid);
   }
 }

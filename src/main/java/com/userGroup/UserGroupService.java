@@ -2,6 +2,8 @@ package com.userGroup;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,13 @@ public class UserGroupService {
       mappedUserGroup.setAlbums(savedUserGroup.getAlbums());
     }
     return mappedUserGroup;
+  }
+  
+  public List<Optional<UserGroupView>> getGroupsWithUser(String uuid){
+    return repository.findByUser_Uuid(uuid).stream()
+        .map(userGroup -> mapper.toOptionalView(Optional.of(userGroup)))
+        .collect(Collectors.toList());
+
   }
 
   public Optional<UserGroupView> delete(String uuid) {

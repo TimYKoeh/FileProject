@@ -36,17 +36,17 @@ public class Person {
 
 
   @Column(name = "vorname")
-  private String firstName;
+  private String vorname;
 
   @Column(name = "nachname")
-  private String surname;
+  private String nachname;
 
   private String email;
 
   public Person(String uuid, String vorname, String nachname, String email) {
     this.uuid = uuid;
-    this.firstName = vorname;
-    this.surname = nachname;
+    this.vorname = vorname;
+    this.nachname = nachname;
     this.email = email;
   }
 }
