@@ -24,7 +24,8 @@ public class UserController {
   @Autowired
   private UserService service;
   
-  @Autowired UserUsergroupService userUserGroupService;
+  @Autowired 
+  private UserUsergroupService userUserGroupService;
 
   @GetMapping(path = "user")
   public ResponseEntity<List<Optional<UserView>>> getList(
@@ -74,7 +75,7 @@ public class UserController {
        return ResponseEntity.ok(service.save(detailView));
     }
   
-  @PutMapping("/user/{uuid}/usergroups2")
+  @PutMapping("/user/{uuid}/usergroups")
   public ResponseEntity<Optional<UserView>> updateUserGroups(
       @PathVariable("uuid") String uuid,
       @RequestBody List<String> groupIds) {

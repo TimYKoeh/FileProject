@@ -39,13 +39,10 @@ public class AlbumController {
   }
 
 
-  @DeleteMapping("album/{uuid}")
-  public ResponseEntity<Optional<AlbumView>> delete(
-      @PathVariable String uuid)
-  {
-    return ResponseEntity.ok(service.delete(uuid));
+  @DeleteMapping("/album/{id}")
+  public void deleteAlbum(@PathVariable("id") String id) {
+      service.delete(id);
   }
-
 
   @PutMapping("album/{uuid}")
   public ResponseEntity<Optional<AlbumView>> update(

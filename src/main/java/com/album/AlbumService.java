@@ -53,15 +53,40 @@ public class AlbumService {
     return mappedAlbum;
   }
 
-  public Optional<AlbumView> delete(String uuid){
+  public Optional<AlbumView> delete(String uuid) {
     Optional<Album> optionalAlbum = repository.findById(uuid);
-    optionalAlbum.ifPresent(album -> {
-      Hibernate.initialize(album.getUserGroups());
-      Hibernate.initialize(album.getPictures());
-      repository.delete(album);
-    });
+
+    if (optionalAlbum.isPresent()) {
+        Album album = optionalAlbum.get();
+
+        try {
+            if (album.getUserGroups() != null) {
+                Hibernate.initialize(album.getUserGroups());
+                album.getUserGroups().clear();
+            }
+
+            if (album.getPictures() != null) {
+                Hibernate.initialize(album.getPictures());
+
+                album.getPictures().clear();
+            }
+
+            repository.delete(album);
+            System.out.println("Album deleted successfully: " + album.getUuid());
+
+        } catch (Exception e) {
+            System.err.println("Error deleting album " + uuid + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete album: " + uuid, e);
+        }
+    } else {
+        System.out.println("Album not found: " + uuid);
+    }
+
     return mapper.toOptionalView(optionalAlbum);
-  }
+}
+
+
 
   public Optional<AlbumView> save(AlbumCreateView album) {
     return mapper.toOptionalView(Optional.of(repository.save(mapper.create(album))));
